@@ -1,9 +1,6 @@
 package com.courseapp.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class User {
@@ -21,6 +18,10 @@ public class User {
     private String lastname;
 
     private String pesel;
+
+    public User() {
+
+    }
 
     public User(String login, String password, String firstname, String lastname, String pesel) {
         this.login = login;

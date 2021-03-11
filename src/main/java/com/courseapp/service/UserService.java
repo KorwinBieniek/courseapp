@@ -2,17 +2,23 @@ package com.courseapp.service;
 
 import com.courseapp.controller.RegisterUserRequestDto;
 import com.courseapp.domain.User;
+import com.courseapp.repository.UserRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class UserService {
 
+    private final UserRepository userRepository;
 
-    //1. Metoda powinna zwrocic stworzony obiekt User na podstawie request.
-    //2. Powinien poleciec wyjatek jesli login jest krotszy niz 8 znakow
-    //3. Powinien poleciec wyjatek jesli haslo jest krotsze niz 10 znakow
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
     public User registerUser(RegisterUserRequestDto request) {
-
         final String login = request.getLogin();
         final String password = request.getPassword();
 
@@ -24,7 +30,14 @@ public class UserService {
             throw new ApplicationException("The password is too short");
         }
 
-        return new User(login, password, request.getFirstname(), request.getLastname(), request.getPesel());
+        User user = new User(login, password, request.getFirstname(), request.getLastname(), request.getPesel());
 
+        return userRepository.save(user);
+    }
+
+    public List<User> findAll() {
+        Iterable<User> result = userRepository.findAll();
+        return StreamSupport.stream(result.spliterator(), false)
+                .collect(Collectors.toList());
     }
 }
