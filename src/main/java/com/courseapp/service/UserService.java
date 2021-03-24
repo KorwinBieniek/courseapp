@@ -40,4 +40,9 @@ public class UserService {
         return StreamSupport.stream(result.spliterator(), false)
                 .collect(Collectors.toList());
     }
+
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElse(null);
+    }
 }

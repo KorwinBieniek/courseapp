@@ -2,28 +2,30 @@ package com.courseapp.controller;
 
 import com.courseapp.domain.User;
 import com.courseapp.service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("user")
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
-    @GetMapping("/employees")
-    public User testApi() {
-        return new User("admin1", "admin2", "Mihail", "Surname", "12345678909");
+    @GetMapping("/{id}")
+    public UserDto get(@PathVariable Long id) {
+        User user = userService.findById(id);
+        return userMapper.toDto(user);
     }
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody RegisterUserRequestDto requestDto) {
-       return userService.registerUser(requestDto);
+    public UserDto registerUser(@RequestBody RegisterUserRequestDto requestDto) {
+        final User user = userService.registerUser(requestDto);
+        return userMapper.toDto(user);
     }
 
 
